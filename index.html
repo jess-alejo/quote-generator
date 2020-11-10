@@ -12,12 +12,10 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="hero">
-      <div class="hero cover"></div>
-      <div id="quote-container" class="quote-container">
+    <div class="container">
+      <div id="quote-container" class="quote-container hidden">
         <!-- Quote -->
         <div class="quote-text">
-          <i class="fas fa-quote-left"></i>
           <span id="quote"
             >Programming is a skill best acquired by practice and example rather
             than from books.</span
@@ -32,10 +30,19 @@
           <button id="twitter" class="twitter-button" title="Tweet This!">
             <i class="fab fa-twitter"></i>
           </button>
-          <button id="new-quote">New Quote</button>
+          <button id="new-quote">
+            <i class="fas fa-quote-left"></i>
+            New Quote
+          </button>
         </div>
       </div>
       <div id="loader" class="loader"></div>
+
+      <div class="attribution">
+        <a href="https://www.freepik.com/vectors/background"
+          >Background vector created by tartila - www.freepik.com</a
+        >
+      </div>
     </div>
 
     <!-- Script -->

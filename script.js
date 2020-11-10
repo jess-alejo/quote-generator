@@ -5,66 +5,79 @@ const twitterButton = document.getElementById("twitter");
 const newQuoteButton = document.getElementById("new-quote");
 const loader = document.getElementById("loader");
 
-let apiQuotes = [];
+let quotesCollection = [];
 
-function loading() {
-  quoteContainer.style.display = 'none'
-  quoteContainer.hidden = true;
-  loader.hidden = false;
+function showLoadingSpinner() {
+  loader.classList.remove("hidden");
+  quoteContainer.classList.add("hidden");
 }
 
-function complete() {
-  loader.hidden = true;
-  quoteContainer.style.display = 'flex'
-  quoteContainer.hidden = false;
+function hideLoadingSpinner() {
+  loader.classList.add("hidden");
+  quoteContainer.classList.remove("hidden");
 }
-//
-// Generate a new quote
+
 function newQuote() {
-  loading();
-  const index = Math.floor(Math.random() * apiQuotes.length);
-  const quote = apiQuotes[index];
-  if (!quote.author) {
-    authorText.textContent = "Unknown";
-  } else {
-    authorText.textContent = quote.author;
+  showLoadingSpinner();
+
+  const index = Math.floor(Math.random() * quotesCollection.length);
+  const quote = quotesCollection[index];
+
+  updateQuoteAuthor(quote);
+  updateQuoteMessage(quote);
+
+  hideLoadingSpinner();
+}
+
+function updateQuoteAuthor(quote) {
+  let authorName = "Unknown";
+
+  if (quote.author) {
+    authorName = quote.author;
   }
 
-  if (quote.text.length > 100) {
+  if (authorName.length > 18) {
+    authorText.classList.add("long-name");
+  } else {
+    authorText.classList.remove("long-name");
+  }
+
+  authorText.textContent = authorName;
+}
+
+function updateQuoteMessage(quote) {
+  if (quote.text.length > 80) {
     quoteText.classList.add("long-quote");
   } else {
     quoteText.classList.remove("long-quote");
   }
 
-  complete();
   quoteText.textContent = quote.text;
 }
 
-// Tweet a quote displayed on screen
-function tweetQuote() {
+function tweetCurrentQuote() {
   const text = `${quoteText.textContent} - ${authorText.textContent}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
   window.open(twitterUrl, "_blank");
 }
 
-// Get Quote from API
-async function getQuote() {
-  loading();
+async function fetchQuoteFromApi() {
+  showLoadingSpinner();
   const apiUrl = "https://type.fit/api/quotes";
 
   try {
     const response = await fetch(apiUrl);
-    apiQuotes = await response.json();
+    quotesCollection = await response.json();
     newQuote();
   } catch (ex) {
-    apiQuotes = localQuotes;
+    quotesCollection = localQuotes;
     newQuote();
   }
 }
 
 // Event Listener
 newQuoteButton.addEventListener("click", newQuote);
-twitterButton.addEventListener("click", tweetQuote);
+twitterButton.addEventListener("click", tweetCurrentQuote);
 
 // On Load
-getQuote();
+fetchQuoteFromApi();
